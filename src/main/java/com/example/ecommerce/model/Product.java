@@ -2,7 +2,9 @@ package com.example.ecommerce.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 
+@ToString
 @AllArgsConstructor
 @Data
 public class Product {
