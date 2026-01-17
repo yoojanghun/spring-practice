@@ -28,4 +28,21 @@ public class ProductService {
     public void addProduct(Product product) {
         products.add(product);
     }
+
+    public void updateProduct(Product product, int productId) {
+         Product productToUpdate = products.stream()
+                .filter(p -> p.getProductId() == productId)
+                .findFirst().orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+
+         int index = products.indexOf(productToUpdate);
+         products.set(index, product);
+    }
+
+    public void deleteProduct(int productId) {
+        Product productToDelete = products.stream()
+                .filter(p -> p.getProductId() == productId)
+                .findFirst().orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+
+        products.remove(productToDelete);
+    }
 }
