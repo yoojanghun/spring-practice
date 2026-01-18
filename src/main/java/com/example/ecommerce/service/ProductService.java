@@ -1,6 +1,7 @@
 package com.example.ecommerce.service;
 
 import com.example.ecommerce.model.Product;
+import com.example.ecommerce.repository.ProductRepository;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -12,37 +13,30 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    List<Product> products = new ArrayList<>(Arrays.asList(
-            new Product(1, "camera", 10000),
-            new Product(2, "computer", 20000),
-            new Product(3, "glasses", 50000)
-    ));
+    private final ProductRepository productRepository;
 
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public List<Product> getProducts() {
+        return productRepository.findAll();
+    }
 
     public Product getProductById(int productId) {
-        return products.stream()
-                .filter(p -> p.getProductId() == productId)
-                .findFirst().orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
     }
 
     public void addProduct(Product product) {
-        products.add(product);
+        productRepository.save(product);
     }
 
-    public void updateProduct(Product product, int productId) {
-         Product productToUpdate = products.stream()
-                .filter(p -> p.getProductId() == productId)
-                .findFirst().orElseThrow(() -> new RuntimeException("Product not found: " + productId));
-
-         int index = products.indexOf(productToUpdate);
-         products.set(index, product);
+    public void updateProduct(Product product) {
+         productRepository.save(product);
     }
 
     public void deleteProduct(int productId) {
-        Product productToDelete = products.stream()
-                .filter(p -> p.getProductId() == productId)
-                .findFirst().orElseThrow(() -> new RuntimeException("Product not found: " + productId));
-
-        products.remove(productToDelete);
+        productRepository.deleteById(productId);
     }
 }
