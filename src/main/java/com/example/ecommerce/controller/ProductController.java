@@ -30,10 +30,4 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    // Service layer에서 throw한 예외를 가로채는 로직
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleNotFound(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.model.Product;
 import com.example.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,6 @@ public class ProductService {
 
     public Product getProductById(int id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No product: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
