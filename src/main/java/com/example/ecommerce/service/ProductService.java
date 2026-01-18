@@ -2,7 +2,6 @@ package com.example.ecommerce.service;
 
 import com.example.ecommerce.model.Product;
 import com.example.ecommerce.repository.ProductRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,5 +17,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Product getProductById(int id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No product: " + id));
     }
 }
