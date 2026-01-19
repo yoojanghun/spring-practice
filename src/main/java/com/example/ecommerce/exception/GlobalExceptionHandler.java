@@ -20,4 +20,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
+    // 상품 Add 실패했을 때
+    @ExceptionHandler(AddFailException.class)
+    public ResponseEntity<String> handleAddFail(AddFailException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
 }

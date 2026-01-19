@@ -1,5 +1,6 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.exception.AddFailException;
 import com.example.ecommerce.exception.ProductNotFoundException;
 import com.example.ecommerce.exception.UpdateFailException;
 import com.example.ecommerce.model.Product;
@@ -29,10 +30,18 @@ public class ProductService {
     }
 
     // setter로 product에 이미지 속성들을 저장
-    public Product addProduct(Product product, MultipartFile imageFile) throws IOException {
-        product.setImageData(imageFile.getBytes());
-        product.setImageName(imageFile.getOriginalFilename());
-        product.setImageType(imageFile.getContentType());
+    public Product addProduct(Product product, MultipartFile imageFile) {
+
+        if(imageFile != null && !imageFile.isEmpty()) {
+            product.setImageName(imageFile.getOriginalFilename());
+            product.setImageType(imageFile.getContentType());
+            try {
+                product.setImageData(imageFile.getBytes());
+            } catch (IOException e) {
+                throw new AddFailException(e);
+            }
+        }
+
         return productRepository.save(product);
     }
 
