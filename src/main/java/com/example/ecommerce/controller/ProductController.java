@@ -36,7 +36,6 @@ public class ProductController {
                                         @RequestPart MultipartFile imageFile) {
         Product savedProduct = productService.addProduct(product, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-
     }
 
     @GetMapping("/product/{productId}/image")
@@ -54,6 +53,12 @@ public class ProductController {
                                                  @RequestPart MultipartFile imageFile) {
         Product updatedProduct = productService.updateProduct(productId, product, imageFile);
         return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/product/{productId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
     }
 
 }

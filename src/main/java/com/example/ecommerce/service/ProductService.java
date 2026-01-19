@@ -51,21 +51,27 @@ public class ProductService {
 
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
-        existingProduct.setBrand(product.getDescription());
+        existingProduct.setBrand(product.getBrand());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setCategory(product.getCategory());
         existingProduct.setReleaseDate(product.getReleaseDate());
         existingProduct.setStockQuantity(product.getStockQuantity());
 
         if (imageFile != null && !imageFile.isEmpty()) {
-            product.setImageName(imageFile.getOriginalFilename());
-            product.setImageType(imageFile.getContentType());
+            existingProduct.setImageName(imageFile.getOriginalFilename());
+            existingProduct.setImageType(imageFile.getContentType());
             try {
-                product.setImageData(imageFile.getBytes());
+                existingProduct.setImageData(imageFile.getBytes());
             } catch (IOException e) {
                 throw new UpdateFailException(e);
             }
         }
         return productRepository.save(existingProduct);
+    }
+
+    public void deleteProduct(int productId) {
+        Product productToDelete = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+        productRepository.delete(productToDelete);
     }
 }
