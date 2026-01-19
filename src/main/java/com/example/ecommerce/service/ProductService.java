@@ -74,4 +74,9 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(productId));
         productRepository.delete(productToDelete);
     }
+
+    public List<Product> searchProducts(String keyword) {
+        return productRepository.searchProducts(keyword);
+    }
+
 }
