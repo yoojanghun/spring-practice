@@ -1,15 +1,12 @@
 package com.example.ecommerce.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @ToString
 @Getter
@@ -20,31 +17,57 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Setter
     private String name;
+
+    @Setter
     private String description;
+
+    @Setter
     private String brand;
+
+    @Setter
     private BigDecimal price;
+
+    @Setter
     private String category;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDateTime releaseDate;
-    private boolean available;
-    private int quantity;
+//  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @Setter
+    private LocalDate releaseDate;
+
+    @Setter
+    private boolean productAvailable;
+
+    @Setter
+    private int stockQuantity;
+
+    @Setter
+    private String imageName;
+
+    @Setter
+    private String imageType;
+
+    @Setter
+    @Lob
+    private byte[] imageData;
 
     protected Product() {}
 
-    private Product(String name, String description, String brand, BigDecimal price, String category, LocalDateTime releaseDate, boolean available, int quantity) {
+    // 생성자에 필드 추가 -> 필수값을 강제로 넣게 해서 객체 안정성 증가.
+    // 파일 업로드는 별 프로세스. 상품 생성 시 이미지를 나중에 업로드하는 상황이 훨씬 많음
+    private Product(String name, String description, String brand, BigDecimal price, String category, LocalDate releaseDate, boolean productAvailable, int stockQuantity) {
         this.name = name;
         this.description = description;
         this.brand = brand;
         this.price = price;
         this.category = category;
         this.releaseDate = releaseDate;
-        this.available = available;
-        this.quantity = quantity;
+        this.productAvailable = productAvailable;
+        this.stockQuantity = stockQuantity;
     }
 
-    public Product of(String name, String description, String brand, BigDecimal price, LocalDateTime releaseDate, String category, boolean available, int quantity) {
+    public Product of(String name, String description, String brand, BigDecimal price, LocalDate releaseDate, String category, boolean available, int quantity) {
         return new Product(name, description, brand, price, category, releaseDate, available, quantity);
     }
 }
