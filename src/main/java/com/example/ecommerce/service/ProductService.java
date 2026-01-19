@@ -1,6 +1,7 @@
 package com.example.ecommerce.service;
 
 import com.example.ecommerce.exception.ProductNotFoundException;
+import com.example.ecommerce.exception.UpdateFailException;
 import com.example.ecommerce.model.Product;
 import com.example.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,29 @@ public class ProductService {
         product.setImageName(imageFile.getOriginalFilename());
         product.setImageType(imageFile.getContentType());
         return productRepository.save(product);
+    }
+
+    public Product updateProduct(int productId, Product product, MultipartFile imageFile) {
+        Product existingProduct =  productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setBrand(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setCategory(product.getCategory());
+        existingProduct.setReleaseDate(product.getReleaseDate());
+        existingProduct.setStockQuantity(product.getStockQuantity());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            product.setImageName(imageFile.getOriginalFilename());
+            product.setImageType(imageFile.getContentType());
+            try {
+                product.setImageData(imageFile.getBytes());
+            } catch (IOException e) {
+                throw new UpdateFailException(e);
+            }
+        }
+        return productRepository.save(existingProduct);
     }
 }

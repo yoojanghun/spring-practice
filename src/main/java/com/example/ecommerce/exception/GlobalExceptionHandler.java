@@ -13,4 +13,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleProductNotFound(ProductNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    // 상품 Update 실패했을 때
+    @ExceptionHandler(UpdateFailException.class)
+    public ResponseEntity<String> handleUpdateFail(UpdateFailException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
 }
