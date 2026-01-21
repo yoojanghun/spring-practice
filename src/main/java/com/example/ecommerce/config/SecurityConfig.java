@@ -15,15 +15,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(MyUserDetailsService myUserDetailsService) {
+    public SecurityConfig(MyUserDetailsService myUserDetailsService, JwtFilter jwtFilter) {
         this.myUserDetailsService = myUserDetailsService;
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -37,12 +40,14 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     // CSRF 보호를 끈다. (대신 JWT, SessionCookie, Token 기반 방식으로 보호)
     // 모든 URL 요청은 인증(로그인)해야 한다. (로그인 안하면 로그인 페이지로 redirect)
     // Postman 같은 곳에서 username과 password만 입력하면 인증 가능하게 해줌 (없으면 Basic Auth 요청보내도 인증 X)
     // Spring Security에서 Session 사용 안함 = 완전 무상태(Stateless) 방식. JWT인증에서 주로 사용
+    // spring filter chain에서 UsernamePasswordAuthenticationFilter 이전에 jwtFilter 먼저 수행
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
